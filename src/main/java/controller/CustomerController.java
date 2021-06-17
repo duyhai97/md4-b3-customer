@@ -1,11 +1,13 @@
 package controller;
 
 import model.Customer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import service.CustomerService;
+import service.CustomerServiceORM;
 import service.ICustomerService;
 
 import java.util.List;
@@ -13,13 +15,18 @@ import java.util.List;
 @Controller
 @RequestMapping("/customer")
 public class CustomerController {
-    private final ICustomerService customerService = new CustomerService();
+//    @Autowired
+//    private ICustomerService customerService;
 
+
+    private final ICustomerService customerService = new CustomerServiceORM();
+    
     @GetMapping("")
-    public String index(Model model) {
+    public ModelAndView index() {
+        ModelAndView modelAndView = new ModelAndView("/index");
         List<Customer> customerList = customerService.findAll();
-        model.addAttribute("customers", customerList);
-        return "/index";
+        modelAndView.addObject("customers", customerList);
+      return modelAndView;
     }
 
     @GetMapping("/create")
